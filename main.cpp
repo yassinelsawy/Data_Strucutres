@@ -306,7 +306,6 @@ public:
             prev->next = cur->next;
             if(tail == cur){
                 tail = prev;
-//                removeLast();
             }
             delete cur;
             length--;
