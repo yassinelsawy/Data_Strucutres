@@ -9,12 +9,19 @@ void read() {
 #endif
 }
 
+void Print(int arr[],int n){
+    for(int i = 0; i < n; i++){
+        cout<<arr[i]<<" ";
+    }
+    cout << endl;
+}
+
 void insertionSort(int arr[],int n){
 
     int key , j;
     for(int i = 1; i < n; i++){
-        key = arr[i];
-        j = i - 1;
+        key = arr[i]; // 4
+        j = i - 1; // 0
         while(j >= 0 && arr[j] > key){
             arr[j + 1] = arr[j];
             j--;
@@ -24,19 +31,31 @@ void insertionSort(int arr[],int n){
 }
 
 void SelectionSort(int arr[], int n){
-
     int minIdx;
-
     for(int i = 0;i < n-1; i++){
-
         minIdx = i;
-
         for(int j = i + 1 ; j < n; j++){
             if(arr[j] < arr[minIdx]){
                 minIdx = j;
             }
         }
         swap(arr[minIdx], arr[i]);
+        Print(arr,n);
+    }
+}
+
+void shell_sort(int arr[] , int n){
+    for(int gap = n / 2; gap > 0 ; gap/=2){
+        for(int i = gap ; i < n;i++){
+            int key = arr[i];
+            int j;
+            j = i - 1;
+            while(j>=0 && arr[j] > key){
+                arr[j+1] = arr[j];
+                j--;
+            }
+            arr[j+1] = key;
+        }
     }
 }
 
@@ -82,7 +101,6 @@ void merge(int arr[],int l, int m, int r){
 void mergeSortRec(int arr[] , int l , int r){
     if(l >= r) return;
     else{
-        //int m = l + (r - l)/2; // adel nesim
         int m = (l+r)/2; // Dr. Beshir
         mergeSortRec(arr, l , m);
         mergeSortRec(arr, m+1, r);
@@ -353,8 +371,8 @@ bool is_operator(char c){
 }
 
 int HasHigherPrecedence(char op1, char op2){
-    int op1weight = operWeight(op1);
-    int op2weight = operWeight(op2);
+    int op1weight = operWeight(op1); // - 1
+    int op2weight = operWeight(op2); // / 2
     if (op1weight == op2weight)
     {
         return true;
@@ -379,7 +397,7 @@ string infixToPostfix(string exp){
        }
        // If the character is operand (Number)
         else if(is_operand(exp[i])){
-           postfix+=exp[i];
+           postfix +=exp[i];
         }
 
         else if(exp[i] == '(') s.push(exp[i]);
@@ -395,18 +413,98 @@ string infixToPostfix(string exp){
     }
     while(!s.empty()){
         postfix+=s.top();
+        postfix+=' ';
         s.pop();
     }
     return postfix;
 }
+template<class T>
+class BST{
+    struct Node{
+        T data;
+        Node *l , *r;
+    };
+    Node* root = NULL;
 
-void Print(int arr[],int n){
-    for(int i = 0; i < n; i++){
-        cout<<arr[i]<<" ";
+public:
+    void insertion(T element){
+        Node* curr;
+        Node* tcurr;
+        Node* newnode = new Node;
+        newnode->data = element;
+        newnode->r = NULL;
+        newnode->l = NULL;
+        if(root == NULL){
+            root = newnode;
+        }else{
+            curr = root;
+            while(curr != NULL){
+                tcurr = curr;
+                if(element < curr->data){
+                    curr = curr->l;
+                }else{
+                    curr = curr->r;
+                }
+            }
+            if(tcurr->data < element){
+                tcurr->r = newnode;
+            }else{
+                tcurr->l = newnode;
+            }
+        }
+
     }
-}
+    void preOrder(Node* p){ // root left right
+        if(p == NULL) return;
+        cout<< p -> data <<" ";
+        preOrder(p->l);
+        preOrder(p->r);
+    }
+    void inOrder(Node *p){ // left root right
+        if(p==NULL) return;
+        inOrder(p->l);
+        cout<< p->data<<" ";
+        inOrder(p->r);
+    }
+    void postOrder(Node *p){ // left right root
+        if(p==NULL) return;
+        inOrder(p->l);
+        inOrder(p->r);
+        cout<< p->data<<" ";
+    }
+    bool search(T val){
+        Node *curr = root;
+        while(curr != NULL){
+            if(curr->data < val){
+                curr = curr->r;
+            }else if (curr->data > val){
+                curr = curr->l;
+            }else{
+                return true;
+            }
+        }
+        return false;
+    }
+    void inorderTraversal()
+    {
+        inOrder(root);
+    }
+    void preorderTraversal()
+    {
+        preOrder(root);
+    }
+    void postorderTraversal()
+    {
+        postorder(root);
+    }
+
+};
+
 int main() {
     read();
+
+    int arr[] = {2 , 4 ,6 , 8,7,1,9};
+    SelectionSort(arr,7);
         //      Linked List     //
 // --------------------------------------------------- //
     linked_list<int> l;
@@ -447,8 +545,23 @@ int main() {
 
     //      InFix to PostFix     //
 // --------------------------------------------------- //
-    string po = "10 * (2 + 1 + 5)/2-1";
-    cout << infixToPostfix(po);
+//    string po = "(3 + 4) * 8 - 6 / 2";
+//    cout << infixToPostfix(po);
+
+//    BST<int>bt;
+//    bt.insertion(20);
+//    bt.insertion(32);
+//    bt.insertion(10);
+//    bt.insertion(55);
+//    bt.insertion(41);
+//    bt.insertion(3);
+//    bt.insertion(7);
+//    bt.insertion(12);
+//    bt.insertion(11);
+//    bt.insertion(1);
+//    bt.preorderTraversal();
+//    cout<< endl<<bt.search(7);
+
 
 
     return 0;
